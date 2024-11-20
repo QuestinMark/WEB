@@ -4,8 +4,10 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Conexión a MongoDB (asegúrate de reemplazar el <your_connection_string> con tu cadena de conexión de MongoDB)
-mongoose.connect('<your_connection_string>', { useNewUrlParser: true, useUnifiedTopology: true })
+// Conexión a MongoDB (reemplaza la URL de conexión con la tuya)
+const uri = 'mongodb+srv://rsanchelop2:hcHIvfDCjOyZGbfM@cluster0.7gvtz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conexión a MongoDB exitosa'))
   .catch((err) => console.log('Error de conexión:', err));
 
@@ -18,6 +20,9 @@ const User = mongoose.model('User', new mongoose.Schema({
 // Middleware para manejar el cuerpo de las peticiones JSON
 app.use(express.json());
 
+// Servir archivos estáticos (si tienes archivos como imágenes o archivos de estilo)
+app.use(express.static(path.join(__dirname, '/')));
+
 // Ruta para recibir los datos del formulario y guardarlos en MongoDB
 app.post('/saveData', (req, res) => {
   const { username, password } = req.body;
@@ -29,10 +34,9 @@ app.post('/saveData', (req, res) => {
     .catch((err) => res.status(500).json({ error: 'Hubo un error al guardar los datos', details: err }));
 });
 
-// Servir archivos estáticos y la página principal
-app.use(express.static(path.join(__dirname, '/')));
+// Ruta principal para servir tu página HTML
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html')); // Asegúrate de que index.html esté en el mismo directorio que server.js
 });
 
 // Inicia el servidor
