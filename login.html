@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .main-content {
+            display: flex;
+            flex: 1; /* Ocupa todo el espacio vertical disponible excepto el footer */
+        }
+        .left-panel {
+            flex: 1; /* 25% del ancho */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+        }
+        .right-panel {
+            flex: 3; /* 75% del ancho */
+            background: url('fondo.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        .form-container {
+            width: 360px;
+            text-align: left;
+        }
+        .title {
+            font-size: 30px; /* Aumentado el tamaño */
+            font-weight: normal; /* Sin negrita */
+            color: #000; /* Color negro */
+            margin-bottom: 20px;
+        }
+        .title sup {
+            font-size: 10px; /* Tamaño del símbolo ® */
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-bottom: 1px solid #007bff; /* Cambia el color al enfocarse */
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #aaa; /* Color gris del texto */
+            margin-bottom: 20px;
+        }
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+        .checkbox-container input:disabled {
+            cursor: not-allowed;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #d3d3d3; /* Botón gris por defecto */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: not-allowed;
+        }
+        button.active {
+            background-color: #007bff; /* Botón azul cuando es activo */
+            cursor: pointer;
+        }
+        footer {
+            background-color: #000;
+            color: #888; /* Texto gris */
+            text-align: left; /* Alineación a la izquierda */
+            padding: 10px 20px; /* Añadido un poco de espacio a la izquierda */
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="left-panel">
+            <div class="form-container">
+                <div class="title">VMware<sup>®</sup> vSphere</div>
+                <form id="loginForm">
+                    <input type="text" id="username" placeholder="example@domain.local" oninput="checkFields()">
+                    <input type="password" id="password" placeholder="Contraseña" oninput="checkFields()">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="session" disabled>
+                        <label for="session">Usar autenticación de sesión de Windows</label>
+                    </div>
+                    <button type="button" id="submitBtn" disabled>Iniciar</button>
+                </form>
+            </div>
+        </div>
+        <div class="right-panel"></div>
+    </div>
+    <footer>
+        Descargar el complemento de autenticación mejorado
+    </footer>
+
+    <script>
+        // Función para verificar los campos y habilitar el botón
+        function checkFields() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Habilitar el botón solo si ambos campos tienen contenido
+            if (username && password) {
+                submitBtn.disabled = false;
+                submitBtn.classList.add('active');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.remove('active');
+            }
+        }
+
+        // Función para cargar los datos desde el localStorage
+        function loadFormData() {
+            const savedUsername = localStorage.getItem('username');
+            const savedPassword = localStorage.getItem('password');
+            if (savedUsername) {
+                document.getElementById('username').value = savedUsername;
+            }
+            if (savedPassword) {
+                document.getElementById('password').value = savedPassword;
+            }
+            checkFields();  // Verifica si el botón debe ser habilitado
+        }
+
+        // Función para guardar los datos en el localStorage
+        function saveFormData() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+        }
+
+        // Escuchar el evento de envío del formulario para guardar los datos
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            saveFormData();
+        });
+
+        // Cargar los datos al cargar la página
+        window.onload = loadFormData;
+    </script>
+</body>
+</html>

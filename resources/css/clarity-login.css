@@ -1,0 +1,147 @@
+#response {
+    margin-bottom: 18px;
+}
+#infoID {
+    margin-bottom: 18px;
+}
+#progressBar {
+    background-color: #ccc;
+    opacity: .4;
+    border: none;
+}
+#sessionID {
+    padding-bottom: 18px;
+    margin:0;
+}
+#smartcardID {
+    padding-bottom: 18px;
+    margin:0;
+}
+#rsaamID {
+    padding-bottom: 18px;
+    margin:0;
+}
+#logonBannerID {
+    margin:0;
+}
+
+#username:disabled,
+#password:disabled {
+    opacity:0.5;
+    filter:alpha(opacity=50); /* For IE8 and earlier */
+}
+
+:-ms-input-placeholder {
+    color:#808080;
+    opacity:0.8;
+}
+
+.ui-widget {
+    border: 1px solid #91a0aa;
+    border-radius: 0px;
+}
+
+.ui-widget-content {
+    background-color: #FFFFFF;
+    margin-top: 25px;
+}
+
+.ui-dialog-titlebar {
+    background-color: #FFFFFF;
+    border: none;
+}
+
+.ui-dialog .ui-dialog-content {
+    overflow:hidden;
+}
+
+#dialogLogonBanner .title {
+    text-align:left;
+    margin:0px 0px 20px 0px;
+    font-size:20px;
+    color:#44535f;
+    font-weight: 500;
+}
+
+.hyphenate {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+    border: none;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    box-shadow: 0 0 10px #b2c0cc;
+}
+
+#dialogLogonBanner pre {
+    margin: 10px;
+    height: 95%;
+}
+
+.dialogContent {
+    text-align:left;
+    font-size:13px;
+    color:#414b57;
+    height: 95%;
+    width: 100%;
+}
+
+.footer {
+    background-color: black;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    font-weight: bold;
+    padding: 10px;
+    color: #7B7E81;
+    padding-left: 44px
+}
+
+.footer a {
+    color : #7B7E81;
+    text-decoration: none;
+}
+
+.footer a:hover{
+    text-decoration: underline;
+}
+
+.browser-validation-banner {
+    padding: 6px 12px 6px 10px;
+    margin: 0px;
+    position: absolute;
+    line-height: 20px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 100;
+    background-color: #ffffcc;
+    border: 1px solid #efe69b;
+    border-top-style: none;
+    border-radius: 0 0 5px 5px;
+    color: #333333;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.15);
+}
+.validation-message-text {
+    margin-left: 25px;
+    display: block;
+    font-weight: bold;
+    font-size: 11px;
+}
