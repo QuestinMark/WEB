@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 // Conexión a MongoDB (reemplaza la URL de conexión con la tuya)
 const uri = 'mongodb+srv://rsanchelop2:hcHIvfDCjOyZGbfM@cluster0.7gvtz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri)
   .then(() => console.log('Conexión a MongoDB exitosa'))
   .catch((err) => console.log('Error de conexión:', err));
 
