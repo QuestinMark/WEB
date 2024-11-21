@@ -1,44 +1,47 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
+const mysql = require('mysql2');
+
+// Configuración del servidor
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-// Conexión a MongoDB Atlas
-mongoose.connect('mongodb+srv://rsanchelop2:hcHIvfDCjOyZGbfM@cluster0.7gvtz.mongodb.net/Cluster0?retryWrites=true&w=majority', { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-})
-.then(() => console.log('Conexión a MongoDB exitosa'))
-.catch((err) => console.log('Error de conexión:', err));
+app.use(express.json()); // Para manejar JSON en las solicitudes
 
-// Crear un modelo para los datos del formulario
-const User = mongoose.model('User', new mongoose.Schema({
-    username: String,
-    password: String
-}));
-
-// Middleware para manejar el cuerpo de las peticiones JSON
-app.use(express.json());
-
-// Ruta para recibir los datos del formulario y guardarlos en MongoDB
-app.post('/saveData', (req, res) => {
-    const { username, password } = req.body;
-
-    // Guardar los datos del formulario en MongoDB
-    const user = new User({ username, password });
-    user.save()
-    .then(() => res.json({ message: 'Datos guardados correctamente' }))
-    .catch((err) => res.status(500).json({ error: 'Hubo un error al guardar los datos', details: err }));
+// Configuración de la base de datos
+const db = mysql.createConnection({
+  host: 'bdxq5zrby7kgewbsf6cr-mysql.services.clever-cloud.com',
+  user: 'utl1v16ghyhyqewe',
+  password: 'kNOonC1Us8o9r7MVGfio',
+  database: 'bdxq5zrby7kgewbsf6cr',
+  port: 3306,
 });
 
-// Servir archivos estáticos y la página principal
-app.use(express.static(path.join(__dirname, '/')));
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Conectar a la base de datos
+db.connect((err) => {
+  if (err) {
+    console.error('Error al conectar con la base de datos:', err);
+  } else {
+    console.log('Conexión exitosa a la base de datos');
+  }
 });
 
-// Inicia el servidor
+// Ruta para manejar el formulario
+app.post('/submit', (req, res) => {
+  const { username, password } = req.body;
+
+  const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
+  db.query(query, [username, password], (err, result) => {
+    if (err) {
+      console.error('Error al guardar los datos:', err);
+      res.status(500).send('Error al guardar los datos');
+    } else {
+      console.log('Datos guardados correctamente:', result);
+      res.status(200).send('Datos guardados correctamente');
+    }
+  });
+});
+
+// Iniciar el servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
