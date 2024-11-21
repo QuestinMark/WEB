@@ -1,20 +1,28 @@
 const express = require('express');
 const mysql = require('mysql2');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser'); // Para parsear el cuerpo de las solicitudes
 
-// Crear la aplicación Express
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Configurar el middleware para procesar datos JSON
-app.use(bodyParser.json());
-
-// Conexión a la base de datos MySQL
+// Conectar a la base de datos MySQL
 const connection = mysql.createConnection({
-    host: 'bdxq5zbr7jkgwebsbf5cr.mysql.svc.cluster.local', // Cambia esta URL por la de tu base de datos MySQL en Render
-    user: 'tu_usuario', // Cambia por tu usuario
-    password: 'tu_contraseña', // Cambia por tu contraseña
-    database: 'nombre_de_base_de_datos', // Cambia por el nombre de tu base de datos
+    host: 'bdxq5zbr7ykgewbsf6cr-mysql.services.clever-cloud.com',
+    user: 'tu_usuario',
+    password: 'tu_contraseña',
+    database: 'mysql_577c61cb-e0d1-4300-94a0-d8f1362b580f'
 });
+
+connection.connect(err => {
+    if (err) {
+        console.error('Error al conectar a la base de datos:', err);
+        return;
+    }
+    console.log('Conexión exitosa a la base de datos');
+});
+
+// Middleware para poder leer datos JSON del cuerpo de la solicitud
+app.use(bodyParser.json());
 
 // Ruta para recibir los datos del formulario
 app.post('/saveData', (req, res) => {
@@ -36,8 +44,7 @@ app.post('/saveData', (req, res) => {
     });
 });
 
-// Arrancar el servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// Iniciar el servidor
+app.listen(port, () => {
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
